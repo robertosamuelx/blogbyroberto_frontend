@@ -1,0 +1,65 @@
+.header {
+    width: auto;
+    height: 200px;
+    max-height: 400px;
+    display: flex;
+}
+
+.header img {
+    width: 100%;
+    max-width: 1920px;
+    height: 100%;
+    margin: 0px 10px 10px;
+}
+
+.menu {
+    background-color: #000000;
+    width: auto;
+    height: 80px;
+    max-height: 200px;
+    max-width: 1920px;
+    margin: 0px 10px;
+    color: #ffffff;
+}
+
+.menu ul {
+    display: flex;
+    justify-content: space-between;
+    font-family: Rye;
+    font-size: 20px;
+    list-style: none;
+}
+
+.menu ul li {
+    padding: 10px;
+    margin: 20px;
+}
+
+.menu ul li .profile {
+    margin-top: -120px;
+    margin-bottom: 0px;
+    max-height: 100px;
+    box-shadow: none;
+}
+
+.menu ul li .profile img {
+    width: 200px;
+    box-shadow: 0px 0px 5px #ffffff;
+}
+
+.menu ul li .profile p {
+    font-family: Quantico;
+    text-align: center;
+    font-size: 18px;
+}
+
+.body {
+    width: auto;
+    height: 100%;
+    margin: 0px 10px 10px;
+}
+
+.body img {
+    width: 100%;
+}
+
