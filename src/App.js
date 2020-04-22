@@ -2,8 +2,8 @@ import React from 'react';
 import Routes from './routes';
 import './global.css';
 import praia from '../src/assets/praia.jpg';
-import praia2 from '../src/assets/praia3.jpg';
-import praia3 from '../src/assets/praia4.jpg';
+import praia2 from '../src/assets/praia2.jpg';
+import praia3 from '../src/assets/praia3.jpg';
 import praia4 from '../src/assets/praia4.jpg';
 
 export default function App () {
