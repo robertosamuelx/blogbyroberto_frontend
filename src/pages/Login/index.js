@@ -10,10 +10,8 @@ export default function Login(){
         <ul>
         <li><Link className="link" to="/">INÍCIO</Link></li>
         <li><Link className="link" to="/">BIBLIOTECA</Link></li>
-        <li>
-        <div className="profile">
+        <li className="profile">
             <p>Blog By Roberto</p>
-        </div>
         </li>
         <li><Link className="link" to="/quemsoueu">QUEM SOU EU</Link></li>
         <li><Link className="link" to="/contato">CONTATO</Link></li>
