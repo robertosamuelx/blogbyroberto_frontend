@@ -1,12 +1,26 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import '../../global.css';
 import './styles.css';
 import { Link } from 'react-router-dom';
 import profile from '../../assets/profile.jpg';
 import sertao from '../../assets/sertao.jpg';
 import { AiFillLike } from "react-icons/ai";
+import api from '../../services/api';
 
 export default function Home(){
+    const [posts, setPosts] = useState([]);
+    const [totalPage, setTotalPage] = useState(0);
+    const [page, setPage] = useState(0);
+    
+
+    useEffect( () => {
+        api.get('/',{})
+        .then( (response) => {
+            setPosts(response.data);
+            console.log(response.headers);
+        } );
+    },[localStorage.getItem('id')]);
+
     return( 
     <div>
         <div className="menu">
@@ -23,18 +37,27 @@ export default function Home(){
 
 
     <div className="body">
-        <div className="post">
-            <div className="post-header">
-                <img src={profile} />
-                <h3>Título da postagem</h3>
-            </div>
-            <div className="post-body">
-                <p>Texto da postagemTexto da postagemTexto da postagemTexto da postagemTexto da postagemTexto da postagemTexto da postagemTexto da postagemTexto da postagemTexto da postagem</p>
-            </div>
-            <div className="post-footer">
-            <section><AiFillLike color="#00ffff" size={20}/><p>2 pessoas curtiram isso</p></section>
-            <p>Postado em 24/04/2020</p>
-            </div>
+        {posts.map( post_ => {
+            return (
+                <div className="post" key={post_._id}>
+                    <div className="post-header">
+                        <img src={profile} />
+                        <h3>{post_.title}</h3>
+                    </div>
+                    <div className="post-body">
+                        <p>{post_.text}</p>
+                    </div>
+                    <div className="post-footer">
+                        <section><AiFillLike color="#00ffff" size={20}/><p>{post_.howManyLiked} pessoas curtiram isso</p></section>
+                        <p>Postado em {post_.postedAt}</p>
+                    </div>
+                </div>
+            );
+        }
+        )}
+
+        <div>
+            Páginas 
         </div>
 
     </div>
