@@ -6,8 +6,11 @@ import { Link } from 'react-router-dom';
 import profile from '../../assets/profile.jpg';
 import sertao from '../../assets/sertao.jpg';
 import { AiFillLike } from "react-icons/ai";
+import { GiCancel } from 'react-icons/gi'
 import {GrLinkNext, GrLinkPrevious} from 'react-icons/gr';
 import api from '../../services/api';
+import MyLoading from '../../resources/Loading';
+import DateFormat from '../../resources/DateFormat';
 
 const postPerPage = 5;
 
@@ -15,8 +18,10 @@ export default function Home(){
     const [posts, setPosts] = useState([]);
     const [totalPost, setTotalPost] = useState(1);
     const [page, setPage] = useState(0);
+    const [isVisibleLoading, setIsVisibleLoading] = useState(false);
 
     function nextPage(){
+        setIsVisibleLoading(true);
         const next_page = Number(page) + 1;
         console.log('next - '+next_page);
         api.get('/',{
@@ -27,16 +32,14 @@ export default function Home(){
         .then( response => {
             setPage(response.headers['page']);
             setPosts(response.data);
-            setTotalPost(Number(response.headers['total'])/postPerPage);
+            setTotalPost(Math.ceil(Number(response.headers['total'])/postPerPage));
             console.log(`actual page ${page}`);
-            if(next_page > totalPost){
-                alert('não há mais postagens');
-                prevPage();
-            }
+            setIsVisibleLoading(false);
         } );
     }
 
     function prevPage(){
+        setIsVisibleLoading(true);
         const prev_page = Number(page) - 1;
         console.log('prev - '+prev_page);
         api.get('/',{
@@ -47,16 +50,39 @@ export default function Home(){
         .then( response => {
             setPage(response.headers['page']);
             setPosts(response.data);
-            setTotalPost(Number(response.headers['total'])/postPerPage);
+            setTotalPost(Math.ceil( Number(response.headers['total'])/postPerPage));
             console.log(`actual page ${page}`);
-            if(prevPage < 1)
-                nextPage();
+            setIsVisibleLoading(false);
         } );
     }
 
     useEffect( () => {
         nextPage()
     },[]);
+
+    function RenderLoading(){
+        if(isVisibleLoading){
+            return (<div style={{display: 'flex',justifyContent:'center',margin: '2%'}}><MyLoading /></div>);
+        }
+        else {
+            return (<div></div>);
+        }
+    }
+
+    function RenderPrevControl(){
+        if(page <= totalPost && page > 1)
+            return (<GrLinkPrevious className="control" onClick={prevPage} size={25} />);
+        else 
+            return (<GiCancel className="control" size={25} />);
+    }
+
+    function RenderNextControl(){
+        if(page < totalPost)
+            return (<GrLinkNext className="control" onClick={nextPage} size={25} />);
+        else 
+            return (<GiCancel className="control" size={25} />);
+    }
+    
 
     return( 
     <div>
@@ -74,6 +100,7 @@ export default function Home(){
 
 
     <div className="body">
+        <RenderLoading />
         {
             posts.map( post_ => {
                 return (
@@ -87,7 +114,7 @@ export default function Home(){
                         </div>
                         <div className="post-footer">
                             <section><AiFillLike color="#00ffff" size={20}/><p>{post_.howManyLiked} pessoas curtiram isso</p></section>
-                            <p>Postado em {post_.postedAt}</p>
+                            <p>Postado em <DateFormat date={post_.postedAt}/></p>
                         </div>
                     </div>
                 );
@@ -96,9 +123,9 @@ export default function Home(){
         }
 
         <div className="footer">
-            <GrLinkPrevious onClick={prevPage} size={16} />
-            Página atual: {page}
-            <GrLinkNext onClick={nextPage} size={16} />
+            <RenderPrevControl />
+            Página {page} de {totalPost}
+            <RenderNextControl />
         </div>
 
     </div>
