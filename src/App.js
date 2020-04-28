@@ -8,7 +8,6 @@ import praia4 from '../src/assets/praia4.jpg';
 
 export default function App () {
 
-
   return (
     
     <div className="container">

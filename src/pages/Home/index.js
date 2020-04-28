@@ -1,16 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {} from 'react';
 import '../../global.css';
 import './styles.css';
-import { Link } from 'react-router-dom';
 import profile from '../../assets/profile.jpg';
-import sertao from '../../assets/sertao.jpg';
 import { AiFillLike } from "react-icons/ai";
 import { GiCancel } from 'react-icons/gi'
 import {GrLinkNext, GrLinkPrevious} from 'react-icons/gr';
 import api from '../../services/api';
-import MyLoading from '../../resources/Loading';
-import DateFormat from '../../resources/DateFormat';
+import { DateFormat, MyLoading , Menu} from '../../resources/components';
+import { authorization } from '../../resources/functions'
 
 const postPerPage = 5;
 
@@ -19,8 +16,10 @@ export default function Home(){
     const [totalPost, setTotalPost] = useState(1);
     const [page, setPage] = useState(0);
     const [isVisibleLoading, setIsVisibleLoading] = useState(false);
+    const [title,setTitle] = useState('');
+    const [text, setText] = useState('');
 
-    function nextPage(){
+    function nextPage(value){
         setIsVisibleLoading(true);
         const next_page = Number(page) + 1;
         console.log('next - '+next_page);
@@ -57,6 +56,7 @@ export default function Home(){
     }
 
     useEffect( () => {
+        console.log('refresh');
         nextPage()
     },[]);
 
@@ -65,7 +65,7 @@ export default function Home(){
             return (<div style={{display: 'flex',justifyContent:'center',margin: '2%'}}><MyLoading /></div>);
         }
         else {
-            return (<div></div>);
+            return (<br />);
         }
     }
 
@@ -82,22 +82,60 @@ export default function Home(){
         else 
             return (<GiCancel className="control" size={25} />);
     }
+
+    function createPost(event){
+        event.preventDefault();
+        const data = {title,text,howManyLiked:0}
+        console.log(data);
+
+        api.put('/create',data,{
+            headers: {
+                Authorization: "eyJhbGciOiJIUzI1NiJ9.W29iamVjdCBPYmplY3Rd.acOW5zBNi7t2FBTIrdjoYBRBkxLEdiNIqSQ0hoi6HRc" //localStorage.getItem('id')
+            }
+        }).then( response => {
+            console.log(response);
+            setPage(0);
+            nextPage();
+        } );
+    }
+
+    function RenderPoster(){
+        if(localStorage.getItem('id') == null)
+            return (
+                <div 
+                className="poster">
+                    <form 
+                    onSubmit={createPost}>
+
+                        <textarea 
+                        placeholder="Postagem..." 
+                        onChange={e => setText(e.target.value)} 
+                        value={text}/>
+
+                        <div 
+                        className="poster-footer">
+
+                            <input 
+                            placeholder="Título da postagem" 
+                            onChange={e => setTitle(e.target.value)} 
+                            value={title}/>
+
+                            <button 
+                            type="submit">Postar</button>
+                        </div>
+                    </form>
+                </div>
+            );
+        else
+            return (<br />);
+    }
     
 
-    return( 
-    <div>
-        <div className="menu">
-        <ul>
-        <li><Link className="link" to="/">INÍCIO</Link></li>
-        <li><Link className="link" to="/">BIBLIOTECA</Link></li>
-        <li className="profile">
-            <p>Blog By Roberto</p>
-        </li>
-        <li><Link className="link" to="/quemsoueu">QUEM SOU EU</Link></li>
-        <li><Link className="link" to="/contato">CONTATO</Link></li>
-        </ul>
-    </div>
+    return(
 
+    <div>
+        <Menu />
+        <RenderPoster />
 
     <div className="body">
         <RenderLoading />

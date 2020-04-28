@@ -1,24 +1,13 @@
 import React from 'react';
-import '../../global.css';
-import './styles.css';
-import { Link } from 'react-router-dom';
+import { Menu } from '../../resources/components';
 
-export default function Whoami(){
-    return(
-    <div>
-        <div className="menu">
-        <ul>
-        <li><Link className="link" to="/">INÍCIO</Link></li>
-        <li><Link className="link" to="/">BIBLIOTECA</Link></li>
-        <li className="profile">
-            <p>Blog By Roberto</p>
-        </li>
-        <li><Link className="link" to="/quemsoueu">QUEM SOU EU</Link></li>
-        <li><Link className="link" to="/contato">CONTATO</Link></li>
-        </ul>
-    </div>
-    <div className="body">
-        <h1>Quem sou eu</h1>
-    </div>
-  </div>);
+export default function Library(){
+    return (
+        <div>
+            <Menu />
+            <div className="body">
+                <h1>Quem sou eu</h1>
+            </div>
+        </div>
+    );
 }
