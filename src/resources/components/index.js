@@ -24,8 +24,29 @@ export function Menu(){
     );
 }
 
-export const MyModal = ({isOpen, onRequestClose, style, contentLabel}) => (
-    <Modal isOpen={isOpen} style={style} onRequestClose={onRequestClose} contentLabel={contentLabel}/>
+const modalStyles = {
+    content : {
+      top                   : '50%',
+      left                  : '50%',
+      right                 : 'auto',
+      bottom                : 'auto',
+      marginRight           : '-50%',
+      transform             : 'translate(-50%, -50%)',
+      boxShadow: '0px 0px 5px black',
+      backgroundColor: 'lavenderblush',
+      width: '20%',
+      height: '10%',
+      borderRadius: '10px',
+      color: 'black',
+      fontFamily: 'Quantico',
+      display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
+  };
+
+export const MyModal = ({isOpen, onRequestClose, contentLabel}) => (
+    <Modal isOpen={isOpen} style={modalStyles}  onRequestClose={onRequestClose}>{contentLabel}</Modal>
 );
 
 export const DateFormat = ({date}) => (

@@ -6,8 +6,8 @@ import { AiFillLike } from "react-icons/ai";
 import { GiCancel } from 'react-icons/gi'
 import {GrLinkNext, GrLinkPrevious} from 'react-icons/gr';
 import api from '../../services/api';
-import { DateFormat, MyLoading , Menu} from '../../resources/components';
-import { authorization } from '../../resources/functions'
+import { DateFormat, MyLoading , Menu, MyModal} from '../../resources/components';
+import { FaTrashAlt } from 'react-icons/fa';
 
 const postPerPage = 5;
 
@@ -18,6 +18,24 @@ export default function Home(){
     const [isVisibleLoading, setIsVisibleLoading] = useState(false);
     const [title,setTitle] = useState('');
     const [text, setText] = useState('');
+    const [isVisibleModal, setIsVisibleModal] = useState(false);
+    const [labelModal, setLabelModal] = useState('');
+
+    function refresh(value){
+        setIsVisibleLoading(true);
+        api.get('/',{
+            params: {
+                'page' : value
+            }
+        })
+        .then( response => {
+            setPage(response.headers['page']);
+            setPosts(response.data);
+            setTotalPost(Math.ceil(Number(response.headers['total'])/postPerPage));
+            console.log(`actual page ${page}`);
+            setIsVisibleLoading(false);
+        } );
+    }
 
     function nextPage(value){
         setIsVisibleLoading(true);
@@ -57,8 +75,8 @@ export default function Home(){
 
     useEffect( () => {
         console.log('refresh');
-        nextPage()
-    },[]);
+        refresh(1)
+    },[postPerPage]);
 
     function RenderLoading(){
         if(isVisibleLoading){
@@ -83,59 +101,85 @@ export default function Home(){
             return (<GiCancel className="control" size={25} />);
     }
 
+
+    function RenderModal(){
+        return (<MyModal isOpen={isVisibleModal} onRequestClose={() => setIsVisibleModal(false)} contentLabel={labelModal}/>);
+    }
+
     function createPost(event){
+        setIsVisibleLoading(true);
         event.preventDefault();
         const data = {title,text,howManyLiked:0}
         console.log(data);
 
-        api.put('/create',data,{
+        api.post('/create',data,{
             headers: {
                 Authorization: "eyJhbGciOiJIUzI1NiJ9.W29iamVjdCBPYmplY3Rd.acOW5zBNi7t2FBTIrdjoYBRBkxLEdiNIqSQ0hoi6HRc" //localStorage.getItem('id')
             }
         }).then( response => {
             console.log(response);
-            setPage(0);
-            nextPage();
+            setLabelModal('Postagem feita!');
+            setIsVisibleLoading(false);
+            setIsVisibleModal(true)
+            setInterval(() => setIsVisibleModal(false) , 3000); 
+            refresh(1);
         } );
     }
 
-    function RenderPoster(){
-        if(localStorage.getItem('id') == null)
-            return (
-                <div 
+    function deletePost(id){
+        setIsVisibleLoading(true);
+        const data = {id};
+        console.log(data);
+        api.post('/delete', data, {
+            headers: {
+                Authorization: "eyJhbGciOiJIUzI1NiJ9.W29iamVjdCBPYmplY3Rd.acOW5zBNi7t2FBTIrdjoYBRBkxLEdiNIqSQ0hoi6HRc" //localStorage.getItem('id')
+            }
+        }).then( response => {
+            console.log(response.data);
+            setIsVisibleLoading(false);
+            setLabelModal('Postagem apagada!');
+            setIsVisibleModal(true)
+            setInterval(() => setIsVisibleModal(false) , 3000); 
+            refresh(page);
+        }).catch( response => {
+            console.log(response.data);
+        });
+    }
+    
+    return(
+
+    <div>
+        <Menu />
+        <RenderModal />
+
+        {localStorage.getItem('id') == null &&
+            <div 
                 className="poster">
                     <form 
                     onSubmit={createPost}>
 
                         <textarea 
                         placeholder="Postagem..." 
+                        value={text}
                         onChange={e => setText(e.target.value)} 
-                        value={text}/>
+                        />
 
                         <div 
                         className="poster-footer">
 
                             <input 
+                            type="text"
                             placeholder="Título da postagem" 
+                            value={title}
                             onChange={e => setTitle(e.target.value)} 
-                            value={title}/>
+                            />
 
                             <button 
                             type="submit">Postar</button>
                         </div>
                     </form>
-                </div>
-            );
-        else
-            return (<br />);
-    }
-    
-
-    return(
-
-    <div>
-        <Menu />
-        <RenderPoster />
+                </div>}
+        
 
     <div className="body">
         <RenderLoading />
@@ -146,9 +190,10 @@ export default function Home(){
                         <div className="post-header">
                             <img src={profile} />
                             <h3>{post_.title}</h3>
+                            <FaTrashAlt style={15} onClick={() => {deletePost(post_._id)}} color="#000000"/>
                         </div>
                         <div className="post-body">
-                            <p>{post_.text}</p>
+                            {post_.text}
                         </div>
                         <div className="post-footer">
                             <section><AiFillLike color="#00ffff" size={20}/><p>{post_.howManyLiked} pessoas curtiram isso</p></section>
