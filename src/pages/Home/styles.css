@@ -52,14 +52,32 @@
     box-shadow: 0px 0px 5px black;
     border-radius: 12px;
     margin-top: 2px;
+    display: flex;
 }
 
-.poster-footer input {
+.poster-footer button:hover {
+    box-shadow: 0px 0px 10px black;
+}
+
+.poster-footer-title {
     font-family: Quantico;
     font-size: 12px;
     width: 45%;
     border-radius: 8px;
     padding: 2px;
+}
+
+.poster-footer-check {
+    font-family: Quantico;
+    font-size: 12px;
+}
+
+.poster-footer-check:hover {
+    font-weight: bold;
+}
+
+.poster-footer-icon {
+    width: 100%;
 }
 
 .post {
@@ -94,6 +112,9 @@
     font-family: Quantico;
     margin: 5px;
     font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .post-footer {

@@ -8,6 +8,7 @@ import {GrLinkNext, GrLinkPrevious} from 'react-icons/gr';
 import api from '../../services/api';
 import { DateFormat, MyLoading , Menu, MyModal} from '../../resources/components';
 import { FaTrashAlt } from 'react-icons/fa';
+import { MdSend } from 'react-icons/md';
 
 const postPerPage = 5;
 
@@ -18,6 +19,7 @@ export default function Home(){
     const [isVisibleLoading, setIsVisibleLoading] = useState(false);
     const [title,setTitle] = useState('');
     const [text, setText] = useState('');
+    const [isVideo, setIsVideo] = useState(false);
     const [isVisibleModal, setIsVisibleModal] = useState(false);
     const [labelModal, setLabelModal] = useState('');
 
@@ -109,10 +111,10 @@ export default function Home(){
     function createPost(event){
         setIsVisibleLoading(true);
         event.preventDefault();
-        const data = {title,text,howManyLiked:0}
-        console.log(data);
+        const data = {title,text,howManyLiked:0,isVideo}
+        console.log(isVideo);
 
-        api.post('/create',data,{
+        api.put('/post',data,{
             headers: {
                 Authorization: "eyJhbGciOiJIUzI1NiJ9.W29iamVjdCBPYmplY3Rd.acOW5zBNi7t2FBTIrdjoYBRBkxLEdiNIqSQ0hoi6HRc" //localStorage.getItem('id')
             }
@@ -120,7 +122,7 @@ export default function Home(){
             console.log(response);
             setLabelModal('Postagem feita!');
             setIsVisibleLoading(false);
-            setIsVisibleModal(true)
+            setIsVisibleModal(true);
             setInterval(() => setIsVisibleModal(false) , 3000); 
             refresh(1);
         } );
@@ -128,9 +130,7 @@ export default function Home(){
 
     function deletePost(id){
         setIsVisibleLoading(true);
-        const data = {id};
-        console.log(data);
-        api.post('/delete', data, {
+        api.delete(`/post/${id}`, {
             headers: {
                 Authorization: "eyJhbGciOiJIUzI1NiJ9.W29iamVjdCBPYmplY3Rd.acOW5zBNi7t2FBTIrdjoYBRBkxLEdiNIqSQ0hoi6HRc" //localStorage.getItem('id')
             }
@@ -144,6 +144,18 @@ export default function Home(){
         }).catch( response => {
             console.log(response.data);
         });
+    }
+
+    function RenderPostBody(props){
+        if(props.post.isVideo){
+            console.log(props.post.text);
+            return (<iframe  
+            src={props.post.text} 
+            frameborder="0" allow="accelerometer; 
+            autoplay; encrypted-media; 
+            gyroscope; picture-in-picture" allowfullscreen></iframe>);}
+        else
+            return (<p>{props.post.text}</p>);
     }
     
     return(
@@ -167,15 +179,18 @@ export default function Home(){
                         <div 
                         className="poster-footer">
 
+                            <p className="poster-footer-check">Assinale para vídeo <input onChange={e => {setIsVideo(e.target.checked)}} type="checkbox"/></p>
+
                             <input 
                             type="text"
+                            className="poster-footer-title"
                             placeholder="Título da postagem" 
                             value={title}
                             onChange={e => setTitle(e.target.value)} 
                             />
 
                             <button 
-                            type="submit">Postar</button>
+                            type="submit"><MdSend color="#000000" className="poster-footer-icon" size={25}/></button>
                         </div>
                     </form>
                 </div>}
@@ -190,10 +205,11 @@ export default function Home(){
                         <div className="post-header">
                             <img src={profile} />
                             <h3>{post_.title}</h3>
-                            <FaTrashAlt style={15} onClick={() => {deletePost(post_._id)}} color="#000000"/>
+                            {localStorage.getItem('id') == null &&
+                            <FaTrashAlt style={15} onClick={() => {deletePost(post_._id)}} color="#000000"/>}
                         </div>
                         <div className="post-body">
-                            {post_.text}
+                            <RenderPostBody post={post_}/>
                         </div>
                         <div className="post-footer">
                             <section><AiFillLike color="#00ffff" size={20}/><p>{post_.howManyLiked} pessoas curtiram isso</p></section>
