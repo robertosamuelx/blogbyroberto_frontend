@@ -11,7 +11,3 @@ export function format(value){
     let minute = time.split(':')[1];
     return day + '/' + month + '/' + year + '   ' + hour + ':' + minute;
 }
-
-export function authorization(value){
-
-}

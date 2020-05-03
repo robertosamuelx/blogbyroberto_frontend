@@ -11,7 +11,7 @@ export default function Routes(){
         <BrowserRouter>
             <Switch>
                 <Route path="/" exact component={Home}  />
-                <Route path="/login" component={Login} />
+                <Route path="/admin" component={Login} />
                 <Route path="/contato" component={Contact} />
                 <Route path="/quemsoueu" component={Whoami} />
                 <Route path="/biblioteca" component={Library} />

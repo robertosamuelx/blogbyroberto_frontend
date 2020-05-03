@@ -9,7 +9,6 @@ import api from '../../services/api';
 import { DateFormat, MyLoading , Menu, MyModal} from '../../resources/components';
 import { FaTrashAlt } from 'react-icons/fa';
 import { MdSend } from 'react-icons/md';
-
 const postPerPage = 5;
 
 export default function Home(){
@@ -111,6 +110,7 @@ export default function Home(){
     function createPost(event){
         setIsVisibleLoading(true);
         event.preventDefault();
+
         const data = {title,text,howManyLiked:0,isVideo}
         console.log(isVideo);
 
@@ -151,9 +151,9 @@ export default function Home(){
             console.log(props.post.text);
             return (<iframe  
             src={props.post.text} 
-            frameborder="0" allow="accelerometer; 
+            frameBorder="0" allow="accelerometer; 
             autoplay; encrypted-media; 
-            gyroscope; picture-in-picture" allowfullscreen></iframe>);}
+            gyroscope; picture-in-picture" allowFullScreen></iframe>);}
         else
             return (<p>{props.post.text}</p>);
     }
