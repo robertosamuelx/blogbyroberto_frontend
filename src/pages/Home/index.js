@@ -116,14 +116,13 @@ export default function Home(){
 
         api.put('/post',data,{
             headers: {
-                Authorization: "eyJhbGciOiJIUzI1NiJ9.W29iamVjdCBPYmplY3Rd.acOW5zBNi7t2FBTIrdjoYBRBkxLEdiNIqSQ0hoi6HRc" //localStorage.getItem('id')
+                Authorization: localStorage.getItem('id')
             }
         }).then( response => {
             console.log(response);
             setLabelModal('Postagem feita!');
             setIsVisibleLoading(false);
             setIsVisibleModal(true);
-            setInterval(() => setIsVisibleModal(false) , 3000); 
             refresh(1);
         } );
     }
@@ -132,14 +131,13 @@ export default function Home(){
         setIsVisibleLoading(true);
         api.delete(`/post/${id}`, {
             headers: {
-                Authorization: "eyJhbGciOiJIUzI1NiJ9.W29iamVjdCBPYmplY3Rd.acOW5zBNi7t2FBTIrdjoYBRBkxLEdiNIqSQ0hoi6HRc" //localStorage.getItem('id')
+                Authorization: localStorage.getItem('id')
             }
         }).then( response => {
             console.log(response.data);
             setIsVisibleLoading(false);
             setLabelModal('Postagem apagada!');
             setIsVisibleModal(true)
-            setInterval(() => setIsVisibleModal(false) , 3000); 
             refresh(page);
         }).catch( response => {
             console.log(response.data);
@@ -164,7 +162,7 @@ export default function Home(){
         <Menu />
         <RenderModal />
 
-        {localStorage.getItem('id') == null &&
+        {localStorage.getItem('id') != null &&
             <div 
                 className="poster">
                     <form 
@@ -205,7 +203,7 @@ export default function Home(){
                         <div className="post-header">
                             <img src={profile} />
                             <h3>{post_.title}</h3>
-                            {localStorage.getItem('id') == null &&
+                            {localStorage.getItem('id') != null &&
                             <FaTrashAlt style={15} onClick={() => {deletePost(post_._id)}} color="#000000"/>}
                         </div>
                         <div className="post-body">

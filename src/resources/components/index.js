@@ -2,7 +2,8 @@ import React from 'react';
 import ReactLoading from 'react-loading';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
-import { format } from '../functions'
+import { format } from '../functions';
+import {FaPowerOff} from 'react-icons/fa';
 
 export const MyLoading = ({type='spin',color='#000000'}) => (
     <ReactLoading type={type} color={color} height={'10%'} width={'10%'} />
@@ -15,7 +16,12 @@ export function Menu(){
             <li><Link className="link" to="/">INÍCIO</Link></li>
             <li><Link className="link" to="/biblioteca">BIBLIOTECA</Link></li>
             <li className="profile">
+                {localStorage.getItem('id') == null &&
                 <p>Blog By Roberto</p>
+                }
+                {localStorage.getItem('id') != null &&
+                    <FaPowerOff color="#ffffff" size={22} onClick={()=>{localStorage.removeItem('id')}}/>
+                }
             </li>
             <li><Link className="link" to="/quemsoueu">QUEM SOU EU</Link></li>
             <li><Link className="link" to="/contato">CONTATO</Link></li>

@@ -1,5 +1,3 @@
-
-
 export function format(value){
     let date = String(value).split('T')[0];
     let day = date.split('-')[2];
