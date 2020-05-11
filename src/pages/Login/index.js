@@ -37,24 +37,13 @@ export default function Login(){
         });
     }
 
-    function RenderModal(){
-        return (<MyModal isOpen={isVisibleModal} onRequestClose={() => setIsVisibleModal(false)} contentLabel={labelModal}/>);
-    }
-
-    function RenderLoading(){
-        if(isVisibleLoading){
-            return (<div style={{display: 'flex',justifyContent:'center',margin: '2%'}}><MyLoading /></div>);
-        }
-        else {
-            return (<br />);
-        }
-    }
-
     return (
         <div>
             <Menu />
-            <RenderLoading />
-            <RenderModal />
+            <MyModal isOpen={isVisibleModal} onRequestClose={() => setIsVisibleModal(false)} contentLabel={labelModal}/>
+            { isVisibleLoading === true &&
+            <div style={{display: 'flex',justifyContent:'center',margin: '2%'}}><MyLoading /></div>
+            }
             <div className="body">
                 <div className="login-container">
                     <img src={imgSertao} alt="sertao" />

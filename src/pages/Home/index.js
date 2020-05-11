@@ -38,9 +38,13 @@ export default function Home(){
         } );
     }
 
-    function nextPage(value){
+    function changePage(value){
         setIsVisibleLoading(true);
-        const next_page = Number(page) + 1;
+        let next_page = 0;
+        if(value === 'next')
+            next_page = Number(page) + 1;
+        else
+            next_page = Number(page) - 1;
         console.log('next - '+next_page);
         api.get('/',{
             params: {
@@ -56,56 +60,25 @@ export default function Home(){
         } );
     }
 
-    function prevPage(){
-        setIsVisibleLoading(true);
-        const prev_page = Number(page) - 1;
-        console.log('prev - '+prev_page);
-        api.get('/',{
-            params: {
-                'page' : prev_page
-            }
-        })
-        .then( response => {
-            setPage(response.headers['page']);
-            setPosts(response.data);
-            setTotalPost(Math.ceil( Number(response.headers['total'])/postPerPage));
-            console.log(`actual page ${page}`);
-            setIsVisibleLoading(false);
-        } );
-    }
-
     useEffect( () => {
         console.log('refresh');
-        refresh(1)
+        refresh(1);
     },[postPerPage]);
-
-    function RenderLoading(){
-        if(isVisibleLoading){
-            return (<div style={{display: 'flex',justifyContent:'center',margin: '2%'}}><MyLoading /></div>);
-        }
-        else {
-            return (<br />);
-        }
-    }
 
     function RenderPrevControl(){
         if(page <= totalPost && page > 1)
-            return (<GrLinkPrevious className="control" onClick={prevPage} size={25} />);
+            return (<GrLinkPrevious className="control" onClick={() => changePage('prev')} size={25} />);
         else 
             return (<GiCancel className="control" size={25} />);
     }
 
     function RenderNextControl(){
         if(page < totalPost)
-            return (<GrLinkNext className="control" onClick={nextPage} size={25} />);
+            return (<GrLinkNext className="control" onClick={() => changePage('next')} size={25} />);
         else 
             return (<GiCancel className="control" size={25} />);
     }
 
-
-    function RenderModal(){
-        return (<MyModal isOpen={isVisibleModal} onRequestClose={() => setIsVisibleModal(false)} contentLabel={labelModal}/>);
-    }
 
     function createPost(event){
         setIsVisibleLoading(true);
@@ -147,8 +120,7 @@ export default function Home(){
     function RenderPostBody(props){
         if(props.post.isVideo){
             console.log(props.post.text);
-            return (<iframe  
-            src={props.post.text} 
+            return (<iframe title={props.post.title} src={props.post.text} 
             frameBorder="0" allow="accelerometer; 
             autoplay; encrypted-media; 
             gyroscope; picture-in-picture" allowFullScreen></iframe>);}
@@ -160,7 +132,7 @@ export default function Home(){
 
     <div>
         <Menu />
-        <RenderModal />
+        <MyModal isOpen={isVisibleModal} onRequestClose={() => setIsVisibleModal(false)} contentLabel={labelModal}/>
 
         {localStorage.getItem('id') != null &&
             <div 
@@ -195,13 +167,16 @@ export default function Home(){
         
 
     <div className="body">
-        <RenderLoading />
+
+            { isVisibleLoading === true &&
+            <div style={{display: 'flex',justifyContent:'center',margin: '2%'}}><MyLoading /></div>
+            }
         {
             posts.map( post_ => {
                 return (
                     <div className="post" key={post_._id}>
                         <div className="post-header">
-                            <img src={profile} />
+                            <img src={profile} alt="meu perfil"/>
                             <h3>{post_.title}</h3>
                             {localStorage.getItem('id') != null &&
                             <FaTrashAlt style={15} onClick={() => {deletePost(post_._id)}} color="#000000"/>}
