@@ -17,7 +17,7 @@ export function Menu(){
             <li><Link className="link" to="/biblioteca">BIBLIOTECA</Link></li>
             <li className="profile">
                 {localStorage.getItem('id') == null &&
-                <p>Blog By Roberto</p>
+                    <p><Link to="/admin">Blog By Roberto</Link></p>
                 }
                 {localStorage.getItem('id') != null &&
                     <FaPowerOff color="#ffffff" size={22} onClick={()=>{localStorage.removeItem('id')}}/>

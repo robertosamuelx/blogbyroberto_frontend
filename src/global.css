@@ -81,13 +81,14 @@ body {
     opacity: 0.8;
 }
 
-.profile {
+.profile a{
     font-family: Quantico;
     color: #7fffd4;
     font-size: 18px;
+    text-decoration: none;
 }
 
-.profile:hover {
+.profile a:hover {
     color: #ffffff;
 }
 
