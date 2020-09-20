@@ -3,7 +3,7 @@ import { Menu } from '../../resources/components';
 import './styles.css';
 import imgProfile from '../../assets/profile.jpg';
 import api from '../../services/api';
-import { MyLoading, MyModal } from '../../resources/components';
+import { MyLoading } from '../../resources/components';
 
 export default function Contact(){
     const [name,setName] = useState('');
@@ -11,7 +11,6 @@ export default function Contact(){
     const [message, setMessage] = useState('');
     const [isVisibleModal,setIsVisibleModal] = useState(false);
     const [isVisibleLoading, setIsVisibleLoading] = useState(false);
-    const [labelModal, setLabelModal] = useState('');
 
     function sendContact(event){
         event.preventDefault();
@@ -32,7 +31,6 @@ export default function Contact(){
     return (
         <div>
             <Menu />
-            <MyModal isOpen={isVisibleModal} onRequestClose={() => setIsVisibleModal(false)} contentLabel={labelModal}/>
             { isVisibleLoading === true &&
             <div style={{display: 'flex',justifyContent:'center',margin: '2%'}}><MyLoading /></div>
             }

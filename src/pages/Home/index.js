@@ -63,7 +63,7 @@ export default function Home(){
     useEffect( () => {
         console.log('refresh');
         refresh(1);
-    },[postPerPage]);
+    },[]);
 
     function RenderPrevControl(){
         if(page <= totalPost && page > 1)
