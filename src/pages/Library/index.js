@@ -6,7 +6,7 @@ export default function Library(){
         <div>
             <Menu />
             <div className="body">
-                <h1>Biblioteca</h1>
+                <h1>Página em construção</h1>
             </div>
         </div>
     );

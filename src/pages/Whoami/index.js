@@ -10,10 +10,10 @@ export default function Whoami(){
             <div className="body">
                 <div className="whoami-container">
                     <div className="whoami-container-header">
-                        <h1>olá eu sou roberto</h1>
+                        <h1>Olá eu sou Roberto</h1>
                         <img src={imgProfile} alt="meu perfil"/>
                     </div>
-                    <p>dsads adsa dsad asdasddsad sadsadsad asdsadsa dsadsdsa dsa dsad sad sad sadasdsadsa sadsadsad sadas sadsa dsadsadsad sadsadsa dsadsads adsdsadd sadasdsd saddsa dsadsa dsadsadsa dasd</p>
+                    <p>Olá eu sou Roberto</p>
                 </div>
             </div>
         </div>

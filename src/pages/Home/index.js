@@ -124,8 +124,12 @@ export default function Home(){
             frameBorder="0" allow="accelerometer; 
             autoplay; encrypted-media; 
             gyroscope; picture-in-picture" allowFullScreen></iframe>);}
-        else
+        else {
+            if(props.post.awsKey){
+                return (<p><a href={props.post.url}>{props.post.awsKey}</a></p>);
+            }
             return (<p>{props.post.text}</p>);
+        }
     }
     
     return(
