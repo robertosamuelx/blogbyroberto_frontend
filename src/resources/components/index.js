@@ -2,8 +2,10 @@ import React from 'react';
 import ReactLoading from 'react-loading';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
-import { format } from '../functions';
+import { formatDate } from '../functions';
 import {FaPowerOff} from 'react-icons/fa';
+import { AiOutlineFile } from 'react-icons/ai';
+import { GrDocumentPdf, GrDocumentWord, GrDocumentExcel } from 'react-icons/gr';
 
 export const MyLoading = ({type='spin',color='#000000'}) => (
     <ReactLoading type={type} color={color} height={'10%'} width={'10%'} />
@@ -56,5 +58,29 @@ export const MyModal = ({isOpen, onRequestClose, contentLabel}) => (
 );
 
 export const DateFormat = ({date}) => (
-    <i>{format(date)}</i>
+    <i>{formatDate(date)}</i>
 );
+
+const iconImgStyle = {
+    width: '50px',
+    height: '50px',
+    border: 'solid 1px #2b2727'
+};
+
+export function FileIcon ({file}) {
+    const type = String(file.fileName);
+    const color = "#000000";
+    const size =  50  ;
+
+    if(type.endsWith('.pdf'))
+        return <GrDocumentPdf color={color} size={size}/>
+    else if(type.endsWith('.doc') || type.endsWith('.docx'))
+        return <GrDocumentWord color={color} size={size}/>
+    else if(type.endsWith('.xls') || type.endsWith('.xlsx'))
+        return <GrDocumentExcel color={color} size={size}/>
+    else if(type.endsWith('.jpeg') || type.endsWith('.jpg'))
+        return <img src={file.url} style={iconImgStyle}/>
+    else {
+        return <AiOutlineFile color={color} size={size} />
+    }
+};

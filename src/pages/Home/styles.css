@@ -11,7 +11,7 @@
 
 .poster {
     width: 100%;
-    height: 110px;
+    height: 150px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -31,7 +31,7 @@
     resize: none;
     width: 100%;
     border-radius: 8px;
-    height: 65%;
+    height: 60%;
     font-family: Quantico;
     padding: 3px;
 }
@@ -40,6 +40,12 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+}
+
+.poster-footer .file {
+    padding: 5px;
+    display: flex;
+    font-family: Quantico;
 }
 
 .poster-footer button {
@@ -115,6 +121,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.post-body .render {
+    display: flex;
+    justify-content: space-between;
+}
+
+.post-body .render-file {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    margin-right: 20px;
 }
 
 .post-footer {

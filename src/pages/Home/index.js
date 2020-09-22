@@ -2,13 +2,14 @@ import React, {useEffect, useState} from 'react';
 import '../../global.css';
 import './styles.css';
 import profile from '../../assets/profile.jpg';
-import { AiFillLike } from "react-icons/ai";
+import { AiFillLike} from "react-icons/ai";
 import { GiCancel } from 'react-icons/gi'
 import {GrLinkNext, GrLinkPrevious} from 'react-icons/gr';
 import api from '../../services/api';
-import { DateFormat, MyLoading , Menu, MyModal} from '../../resources/components';
+import { DateFormat, MyLoading , Menu, MyModal, FileIcon} from '../../resources/components';
 import { FaTrashAlt } from 'react-icons/fa';
 import { MdSend } from 'react-icons/md';
+import { formatSize } from '../../resources/functions'
 const postPerPage = 5;
 
 export default function Home(){
@@ -21,6 +22,8 @@ export default function Home(){
     const [isVideo, setIsVideo] = useState(false);
     const [isVisibleModal, setIsVisibleModal] = useState(false);
     const [labelModal, setLabelModal] = useState('');
+    const [file, setFile] = useState(new Blob());
+    const [fileName, setFileName] = useState('');
 
     function refresh(value){
         setIsVisibleLoading(true);
@@ -84,7 +87,15 @@ export default function Home(){
         setIsVisibleLoading(true);
         event.preventDefault();
 
-        const data = {title,text,howManyLiked:0,isVideo}
+        const data = new FormData();
+        data.append('title',title);
+        data.append('text',text);
+        data.append('howManyLiked',0);
+        if(isVideo)
+            data.append('isVideo',isVideo);
+        if(file)
+            data.append('file',file, fileName);
+
         console.log(isVideo);
 
         api.put('/post',data,{
@@ -97,7 +108,13 @@ export default function Home(){
             setIsVisibleLoading(false);
             setIsVisibleModal(true);
             refresh(1);
-        } );
+        } ).catch( err => {
+            console.log(err)
+            setLabelModal('Falha ao carregar o arquivo!');
+            setIsVisibleLoading(false);
+            setIsVisibleModal(true);
+            refresh(1);
+        });
     }
 
     function deletePost(id){
@@ -126,10 +143,23 @@ export default function Home(){
             gyroscope; picture-in-picture" allowFullScreen></iframe>);}
         else {
             if(props.post.awsKey){
-                return (<p><a href={props.post.url}>{props.post.awsKey}</a></p>);
+                return renderFile(props.post);
             }
             return (<p>{props.post.text}</p>);
         }
+    }
+
+    function renderFile(post){
+        return (
+            <div className="post-body render">
+                <a target="_blank" rel="noopener noreferrer" href={post.url}><FileIcon file={post} /></a>
+                <div className="post-body render-file">
+                    <b>{post.fileName}</b>
+                    <i>{formatSize(post.size)}</i>
+                </div>
+                <p>{post.text}</p>
+            </div>
+        );
     }
     
     return(
@@ -162,6 +192,15 @@ export default function Home(){
                             value={title}
                             onChange={e => setTitle(e.target.value)} 
                             />
+
+                        <input 
+                            type="file"
+                            className="poster-footer file"
+                            onChange={e => {
+                                setFile(e.target.files[0])
+                                setFileName(e.target.files[0].name)
+                            }}
+                        />
 
                             <button 
                             type="submit"><MdSend color="#000000" className="poster-footer-icon" size={25}/></button>
