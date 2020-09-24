@@ -93,8 +93,17 @@ export default function Home(){
         data.append('howManyLiked',0);
         if(isVideo)
             data.append('isVideo',isVideo);
-        if(file)
-            data.append('file',file, fileName);
+        if(file){
+            if(file.size <= (100 * 1024 * 1024))
+                data.append('file',file, fileName);
+            else {
+                setLabelModal('O arquivo é grande demais!');
+                setIsVisibleLoading(false);
+                setIsVisibleModal(true);
+                refresh(1);
+                return ;
+            }
+        }
 
         console.log(isVideo);
 
@@ -109,7 +118,7 @@ export default function Home(){
             setIsVisibleModal(true);
             refresh(1);
         } ).catch( err => {
-            console.log(err)
+            console.log(err.message)
             setLabelModal('Falha ao carregar o arquivo!');
             setIsVisibleLoading(false);
             setIsVisibleModal(true);
